@@ -1,4 +1,4 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, TupleItemCell } from 'ton-core';
 
 export type Task1Config = {};
 
@@ -25,5 +25,16 @@ export class Task1 implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().endCell(),
         });
+    }
+
+    async getFindBranchByHash(provider: ContractProvider, hash: bigint, tree: Cell) {
+        const result = await provider.get('find_branch_by_hash', [
+            { type: 'int', value: hash },
+            { type: 'cell', cell: tree },
+        ]);
+        return {
+            out: result.stack.readCell(),
+            gasUsed: result.gasUsed,
+        };
     }
 }

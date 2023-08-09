@@ -35,4 +35,24 @@ describe('Task1', () => {
         // the check is done inside beforeEach
         // blockchain and task1 are ready to use
     });
+
+    const baseCell = Cell.fromBase64('te6ccgEBCgEAzAABCQAAAAXAAQIDzsADAgBB0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsAgEgBwQCASAGBQBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOACASAJCABBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGA=')
+
+    it('base case', async () => {
+        const { out, gasUsed} = await task1.getFindBranchByHash(
+          BigInt('0xb6de242de60b6755c875dc5ff58db66f10810150e690bef0293201728f555387'),
+          baseCell
+        );
+        expect(out.bits.length).toEqual(258);
+        expect(gasUsed).toEqual(3448n);
+    });
+
+    it('not find case', async () => {
+        const { out, gasUsed} = await task1.getFindBranchByHash(
+          404n,
+          baseCell
+        );
+        expect(out.bits.length).toEqual(0);
+        expect(gasUsed).toEqual(6105n);
+    });
 });
