@@ -12,8 +12,38 @@
 () recv_internal() {
 }
 
+(int) tlen (tuple t) asm "TLEN";
+
+(int) dot_product(tuple vecA, tuple vecB) inline {
+  int out = 0;
+  var i = 0;
+  repeat (vecA.tlen()) {
+    out += vecA.at(i) * vecB.at(i);
+    i += 1;
+  }
+  return out;
+}
+
 ;; testable
 (tuple) matrix_multiplier(tuple matrixA, tuple matrixB) method_id {
-  return null();
+  tuple out = empty_tuple();
+  var i = 0;
+  repeat (matrixA.tlen()) {
+    tuple row = empty_tuple();
+    var j = 0;
+    repeat (matrixB.at(0).tlen()) {
+      tuple col = empty_tuple();
+      var k = 0;
+      repeat (matrixB.tlen()) {
+        col~tpush(matrixB.at(k).at(j));
+        k += 1;
+      }
+      row~tpush(dot_product(matrixA.at(i), col));
+      j += 1;
+    }
+    out~tpush(row);
+    i += 1;
+  }
+  return out;
 }
 

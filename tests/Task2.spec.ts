@@ -35,4 +35,22 @@ describe('Task2', () => {
         // the check is done inside beforeEach
         // blockchain and task2 are ready to use
     });
+
+    it('base case', async () => {
+        const { out, gasUsed} = await task2.getMatrixMultiplier(
+          [[1n, 2n],[4n, 5n]],
+          [[6n, 5n], [3n, 2n]],
+        );
+        expect(out).toEqual([[12n, 9n], [39n, 30n]]);
+        expect(gasUsed).toEqual(5838n);
+    });
+
+    it('different side case', async () => {
+        const { out, gasUsed} = await task2.getMatrixMultiplier(
+          [[1n, 2n],[3n, 4n], [5n, 6n]],
+          [[1n, 2n, 3n], [4n, 5n, 6n]],
+        );
+        expect(out).toEqual([[9n, 12n, 15n], [19n, 26n, 33n], [29n, 40n, 51n]]);
+        expect(gasUsed).toEqual(12164n);
+    });
 });
