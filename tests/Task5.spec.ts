@@ -35,4 +35,37 @@ describe('Task5', () => {
         // the check is done inside beforeEach
         // blockchain and task5 are ready to use
     });
+
+    it('empty case', async () => {
+        const { out, gasUsed} = await task5.getFibonacciSequence(201n, 0n);
+        expect(out).toEqual([]);
+        expect(gasUsed).toEqual(423n);
+    });
+
+    it('base case', async () => {
+        const { out, gasUsed} = await task5.getFibonacciSequence(201n, 4n);
+        expect(out).toEqual([
+            453973694165307953197296969697410619233826n,
+            734544867157818093234908902110449296423351n,
+            1188518561323126046432205871807859915657177n,
+            1923063428480944139667114773918309212080528n,
+        ]);
+        expect(gasUsed).toEqual(28248n);
+    });
+
+    it('max N case', async () => {
+        const { out, gasUsed } = await task5.getFibonacciSequence(369n, 1n);
+        expect(out).toEqual([
+            58472848379039952684853851736901133239741266891456844557261755914039063645794n
+        ]);
+        expect(gasUsed).toEqual(25433n);
+    });
+
+    it('max K case', async () => {
+        const { out, gasUsed } = await task5.getFibonacciSequence(115n, 255n);
+        expect(out.length).toEqual(255);
+        expect(out.shift()).toEqual(483162952612010163284885n);
+        expect(out.pop()).toEqual(58472848379039952684853851736901133239741266891456844557261755914039063645794n);
+        expect(gasUsed).toEqual(75207n);
+    });
 });

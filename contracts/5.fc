@@ -16,8 +16,42 @@
 () recv_internal() {
 }
 
-;; testable
-(tuple) fibonacci_sequence (int n, int k) method_id {
-  return null();
+(int) fibonacci_next (int prev, int curr) inline {
+  return prev + curr;
 }
 
+(int) fibonacci (int n) inline {
+  if (n <= 1) {
+    return n;
+  }
+  var prev = 0;
+  var curr = 1;
+  repeat(n - 1) {
+    var temp = curr;
+    curr += prev;
+    prev = temp;
+  }
+  return curr;
+}
+
+;; testable
+(tuple) fibonacci_sequence (int n, int k) method_id {
+  tuple out = empty_tuple();
+  if (k == 0) {
+    return out;
+  }
+  var prev = fibonacci(n);
+  out~tpush(prev);
+  if (k == 1) {
+    return out;
+  }
+  var curr = fibonacci(n + 1);
+  out~tpush(curr);
+  repeat(k - 2) {
+    var temp = fibonacci_next(prev, curr);
+    out~tpush(temp);
+    prev = curr;
+    curr = temp;
+  }
+  return out;
+}
