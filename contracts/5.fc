@@ -20,18 +20,18 @@
   return prev + curr;
 }
 
-(int) fibonacci (int n) inline {
+(int, int) fibonacci (int n) inline {
   if (n <= 1) {
-    return n;
+    return (0, n);
   }
-  var prev = 0;
-  var curr = 1;
+  int prev = 0;
+  int curr = 1;
   repeat(n - 1) {
     var temp = curr;
     curr += prev;
     prev = temp;
   }
-  return curr;
+  return (prev, curr);
 }
 
 ;; testable
@@ -40,12 +40,11 @@
   if (k == 0) {
     return out;
   }
-  var prev = fibonacci(n);
+  (int prev, int curr) = fibonacci(n + 1);
   out~tpush(prev);
   if (k == 1) {
     return out;
   }
-  var curr = fibonacci(n + 1);
   out~tpush(curr);
   repeat(k - 2) {
     var temp = fibonacci_next(prev, curr);

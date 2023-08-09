@@ -50,7 +50,7 @@ describe('Task5', () => {
             1188518561323126046432205871807859915657177n,
             1923063428480944139667114773918309212080528n,
         ]);
-        expect(gasUsed).toEqual(28248n);
+        expect(gasUsed).toEqual(14637n);
     });
 
     it('max N case', async () => {
@@ -58,7 +58,7 @@ describe('Task5', () => {
         expect(out).toEqual([
             58472848379039952684853851736901133239741266891456844557261755914039063645794n
         ]);
-        expect(gasUsed).toEqual(25433n);
+        expect(gasUsed).toEqual(25544n);
     });
 
     it('max K case', async () => {
@@ -66,6 +66,6 @@ describe('Task5', () => {
         expect(out.length).toEqual(255);
         expect(out.shift()).toEqual(483162952612010163284885n);
         expect(out.pop()).toEqual(58472848379039952684853851736901133239741266891456844557261755914039063645794n);
-        expect(gasUsed).toEqual(75207n);
+        expect(gasUsed).toEqual(67358n);
     });
 });
