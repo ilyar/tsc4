@@ -37,9 +37,15 @@ describe('Task5', () => {
     });
 
     it('empty case', async () => {
-        const { out, gasUsed} = await task5.getFibonacciSequence(201n, 0n);
+        const { out, gasUsed} = await task5.getFibonacciSequence(0n, 0n);
         expect(out).toEqual([]);
         expect(gasUsed).toEqual(415n);
+    });
+
+    it('simple case', async () => {
+        const { out, gasUsed} = await task5.getFibonacciSequence(0n, 10n);
+        expect(out).toEqual([0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n]);
+        expect(gasUsed).toEqual(1786n);
     });
 
     it('base case', async () => {
