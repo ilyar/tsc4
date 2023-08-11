@@ -20,9 +20,12 @@
   return prev + curr;
 }
 
-(int, int) fibonacci (int n) inline {
+forall X -> tuple Tuple(X x) asm "1 TUPLE";
+forall X, Y -> tuple Pair(X x, Y y) asm "PAIR";
+
+(tuple) fibonacci (int n, int k) inline {
   if (n <= 1) {
-    return (0, n);
+    return Tuple(n);
   }
   int prev = 0;
   int curr = 1;
@@ -31,21 +34,23 @@
     curr += prev;
     prev = temp;
   }
-  return (prev, curr);
+  if (k == 1) {
+    return Tuple(curr);
+  }
+  return Pair(prev, curr);
 }
 
 ;; testable
 (tuple) fibonacci_sequence (int n, int k) method_id {
-  tuple out = empty_tuple();
   if (k == 0) {
-    return out;
+    return empty_tuple();
   }
-  (int prev, int curr) = fibonacci(n + 1);
-  out~tpush(prev);
   if (k == 1) {
-    return out;
+    return fibonacci(n, k);
   }
-  out~tpush(curr);
+  tuple out = fibonacci(n + 1, k);
+  int prev = out.at(0);
+  int curr = out.at(1);
   repeat(k - 2) {
     var temp = fibonacci_next(prev, curr);
     out~tpush(temp);

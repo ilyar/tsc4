@@ -39,7 +39,7 @@ describe('Task5', () => {
     it('empty case', async () => {
         const { out, gasUsed} = await task5.getFibonacciSequence(201n, 0n);
         expect(out).toEqual([]);
-        expect(gasUsed).toEqual(423n);
+        expect(gasUsed).toEqual(415n);
     });
 
     it('base case', async () => {
@@ -50,22 +50,33 @@ describe('Task5', () => {
             1188518561323126046432205871807859915657177n,
             1923063428480944139667114773918309212080528n,
         ]);
-        expect(gasUsed).toEqual(14637n);
+        expect(gasUsed).toEqual(14742n);
     });
 
+    // sequence from N to N+K terms (0<=N<=370; 0<=N+K<=371; 0<=K<=255)
+    const maxN = 370n;
+    const maxK = 255n;
+    const maxNK = 371n;
+
     it('max N case', async () => {
-        const { out, gasUsed } = await task5.getFibonacciSequence(369n, 1n);
+        const { out, gasUsed } = await task5.getFibonacciSequence(maxN, 0n);
+        expect(out).toEqual([]);
+        expect(gasUsed).toEqual(415n);
+    });
+
+    it('max NK case', async () => {
+        const { out, gasUsed } = await task5.getFibonacciSequence(maxNK - 1n, 1n);
         expect(out).toEqual([
-            58472848379039952684853851736901133239741266891456844557261755914039063645794n
+            94611056096305838013295371573764256526437182762229865607320618320601813254535n,
         ]);
-        expect(gasUsed).toEqual(25544n);
+        expect(gasUsed).toEqual(25526n);
     });
 
     it('max K case', async () => {
-        const { out, gasUsed } = await task5.getFibonacciSequence(115n, 255n);
+        const { out, gasUsed } = await task5.getFibonacciSequence(maxNK - maxK, maxK);
         expect(out.length).toEqual(255);
-        expect(out.shift()).toEqual(483162952612010163284885n);
-        expect(out.pop()).toEqual(58472848379039952684853851736901133239741266891456844557261755914039063645794n);
-        expect(gasUsed).toEqual(67358n);
+        expect(out.shift()).toEqual(781774079430987230203437n);
+        expect(out.pop()).toEqual(94611056096305838013295371573764256526437182762229865607320618320601813254535n);
+        expect(gasUsed).toEqual(67530n);
     });
 });
