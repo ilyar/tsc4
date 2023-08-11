@@ -56,7 +56,7 @@ describe('Task4', () => {
           decrypted,
         );
         expect(cellToBoc(out)).toEqual(cellToBoc(encrypted));
-        expect(gasUsed).toEqual(199290n);
+        expect(gasUsed).toEqual(194806n);
     });
 
     it('decrypt case', async () => {
@@ -65,6 +65,7 @@ describe('Task4', () => {
           encrypted,
         );
         expect(cellToBoc(out)).toEqual(cellToBoc(decrypted));
-        expect(gasUsed).toEqual(199370n);
+        expect(gasUsed).toEqual(194886n);
     });
 });
+

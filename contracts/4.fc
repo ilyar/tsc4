@@ -14,14 +14,10 @@ int ascii_rot(int char_code, int shift) inline {
   int z_ASCII = 122;
   int A_ASCII = 65;
   int Z_ASCII = 90;
-  if (char_code >= a_ASCII) {
-    if (char_code <= z_ASCII) {
-      return ((char_code - a_ASCII + shift) % 26) + a_ASCII;
-    }
-  } elseif (char_code >= A_ASCII) {
-    if (char_code <= Z_ASCII) {
-      return ((char_code - A_ASCII + shift) % 26) + A_ASCII;
-    }
+  if ((char_code >= a_ASCII) & (char_code <= z_ASCII)) {
+      return (char_code - a_ASCII + shift) % 26 + a_ASCII;
+  } elseif ((char_code >= A_ASCII) & (char_code <= Z_ASCII)) {
+      return (char_code - A_ASCII + shift) % 26 + A_ASCII;
   }
   return char_code;
 }
