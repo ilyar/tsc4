@@ -36,7 +36,17 @@ describe('Task1', () => {
         // blockchain and task1 are ready to use
     });
 
+    const emptyCell = Cell.fromBase64('te6ccgEBAQEAAgAAAA==')
     const baseCell = Cell.fromBase64('te6ccgEBCgEAzAABCQAAAAXAAQIDzsADAgBB0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsAgEgBwQCASAGBQBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOACASAJCABBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGA=')
+
+    it('empty case', async () => {
+        const { out, gasUsed} = await task1.getFindBranchByHash(
+          BigInt('0xb6de242de60b6755c875dc5ff58db66f10810150e690bef0293201728f555387'),
+          emptyCell
+        );
+        expect(out.bits.length).toEqual(0);
+        expect(gasUsed).toEqual(988n);
+    });
 
     it('base case', async () => {
         const { out, gasUsed} = await task1.getFindBranchByHash(
@@ -53,6 +63,6 @@ describe('Task1', () => {
           baseCell
         );
         expect(out.bits.length).toEqual(0);
-        expect(gasUsed).toEqual(6105n);
+        expect(gasUsed).toEqual(5587n);
     });
 });
