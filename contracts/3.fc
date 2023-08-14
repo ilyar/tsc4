@@ -1,8 +1,8 @@
-{- 
+{-
   TASK 3 - Find and replace binary substring
   Binary string is represented as a cell linked list: string splitted to chunks,
   first chunk stored to the root cell, next one to the cell in ref and so on;
-  each cell can have only one ref. 
+  each cell can have only one ref.
   Write the method that find and replaces one flags in the binary string
   with another value. Flags and values can be can be of any length, but
   strictly up to 128 bits. The method must replace every flag it finds.
@@ -19,8 +19,81 @@
 () recv_internal() {
 }
 
-;; testable
-(cell) find_and_replace(int flag, int value, cell linked_list) method_id {
-  return begin_cell().end_cell();
+int bit_mask(int n, int len) asm "MODPOW2";
+(int, ()) ~bit_mask(int n, int len) asm "MODPOW2";
+int bits(int x) asm "UBITSIZE";
+slice to_slice(cell c) asm "CTOS";
+int remains(slice s) asm "SBITS";
+forall X -> int empty (X x) asm "ISNULL";
+forall X -> (tuple, ()) push (tuple tail, X head) asm "CONS";
+forall X -> (tuple, (X)) pop (tuple t) asm "UNCONS";
+(int) len (tuple t) asm "TLEN";
+
+(int {-offset-}, int {-size-}) overlap(int flag, int data, int data_len) inline {
+  if (flag == 0) {
+    return (0, 0);
+  }
+  int flag_len = flag.bits();
+  data = data >> (data_len - flag_len);
+  if (data == flag) {
+    return (0, flag_len);
+  }
+  return overlap(flag & ((1 << (flag_len - 1)) - 1), data, data.bits());
 }
 
+(int {-offset-}, int {-size-}) match(int flag, int data) inline method_id {
+  int flag_len = flag.bits();
+  int data_len = data.bits();
+  if (flag_len > data_len) {
+    return overlap(flag & ((1 << (flag_len - data_len)) - 1), data, data_len);
+  }
+  int diff = data_len - flag_len + 1;
+  int mask = (1 << flag_len) - 1;
+  int i = 0;
+  repeat (diff) {
+    int current = (data >> i) & mask;
+    if (current == flag) {
+      return (diff - i - 1, flag_len);
+    }
+    i += 1;
+  }
+  return overlap(flag & ((1 << (flag_len - 1)) - 1), data, data_len);
+}
+
+(tuple) collect(tuple acc, cell list) inline {
+  slice input = to_slice(list);
+  int size = input.remains();
+  acc~push(pair(input~load_uint(size), size));
+  if (slice_refs_empty?(input) == 0) {
+    cell ref = input~load_ref();
+    return collect(acc, ref);
+  }
+  return acc;
+}
+
+;; testable
+(cell) find_and_replace(int flag, int value, cell linked_list) method_id {
+  tuple stack = collect(null(), linked_list);
+  builder out = begin_cell();
+  builder next = begin_cell();
+  while (~ stack.empty()) {
+    (int data, int data_bits) = unpair(stack~pop());
+    int data_len = data.bits();
+    (int offset, int size) = match(flag, data);
+
+    int replaced = 0;
+    if (size > 0) {
+      flag = flag >> size;
+      replaced = value.bit_mask(size);
+      if (offset == 0) {
+        replaced = replaced << (data_len - size);
+      }
+    }
+    replaced = data | replaced;
+    out = out.store_uint(replaced, data_bits);
+    out = next.store_ref(end_cell(out));
+    next = begin_cell();
+  }
+  var s = to_slice(end_cell(out));
+  return s~load_ref();
+}

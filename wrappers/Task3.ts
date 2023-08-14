@@ -26,4 +26,30 @@ export class Task3 implements Contract {
             body: beginCell().endCell(),
         });
     }
+
+    async getMatch(provider: ContractProvider, flag: number, data: number) {
+        const result = await provider.get('match', [
+            { type: 'int', value: BigInt(flag) },
+            { type: 'int', value: BigInt(data) },
+        ]);
+        return {
+            out: [
+                Number(result.stack.readBigNumber()),
+                Number(result.stack.readBigNumber()),
+            ],
+            gasUsed: result.gasUsed,
+        };
+    }
+
+    async getFindAndReplace(provider: ContractProvider, flag: bigint, value: bigint, list: Cell) {
+        const result = await provider.get('find_and_replace', [
+            { type: 'int', value: flag },
+            { type: 'int', value: value },
+            { type: 'cell', cell: list },
+        ]);
+        return {
+            out: result.stack.readCell(),
+            gasUsed: result.gasUsed,
+        };
+    }
 }
